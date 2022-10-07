@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.broker";
+option java_outer_classname = "BrokerProto";
+option objc_class_prefix = "HLW";
+
+package broker;
+
+service BrokerServer {
+    rpc RegisterTopic (TopicRequest) returns (MainResponse) {}
+    rpc ListTopics (TopicRequest) returns (TopicsResponse) {}
+    rpc SubscribeTopic (TopicRequest) returns (MainResponse) {}
+
+    rpc UpdateTopic (TopicUpdateRequest) returns (MainResponse) {}
+}
+
+message TopicRequest {
+    string topic = 1;
+    string port = 2;
+}
+
+message TopicUpdateRequest {
+    string topic = 1;
+    string message = 2;
+}
+
+message MainResponse {
+    string type = 1;
+    string message = 2;
+}
+
+message TopicsResponse {
+    repeated string topics = 1;
+}

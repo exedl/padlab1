@@ -1,0 +1,28 @@
+{
+    "name": "sender",
+    "version": "1.0.0",
+    "description": "",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "dist": "electron-builder"
+    },
+    "keywords": [],
+    "author": "Exedl",
+    "devDependencies": {
+        "electron": "^17.4.11",
+        "electron-builder": "^22.14.13"
+    },
+    "dependencies": {
+        "@grpc/grpc-js": "^1.7.1",
+        "grpc": "^1.24.11",
+        "grpc-tools": "^1.11.2",
+        "jquery": "^3.6.0"
+    },
+    "build": {
+        "win": {
+            "target": "portable",
+            "icon": "build/icon.ico"
+        }
+    }
+}

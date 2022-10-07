@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" type="text/css" href="resources/fonts/Roboto/roboto.css">
+	<link rel="stylesheet" type="text/css" href="resources/fonts/Icons/icons.css">
+	<link rel="stylesheet" type="text/css" href="resources/styles/styles.css">
+</head>
+<body>
+	<div class="app">
+		<div class="header">
+			<div class="button active" data-action="page" data-page="1">
+				<i class="bi bi-layers-fill"></i>
+			</div>
+
+			<div class="button" data-action="page" data-page="3">
+				<i class="bi bi-info-circle-fill"></i>
+			</div>
+
+			<div class="close">
+				<i class="bi bi-x"></i>
+			</div>
+		</div>
+
+		<div class="content">
+			<div class="page" data-action="page" data-page="0">
+				Proto:
+				<div class="input-group">
+					<select name="proto">
+						<option value="tcp">TCP</option>
+						<option value="grpc">gRPC</option>
+					</select>
+				</div>
+
+				<div class="btn do" data-type="selectProto">Select proto</div>
+			</div>
+
+			<div class="page" data-action="page" data-page="1" style="display: none;">
+				<div class="input-group">
+					<input type="text" name="title" placeholder="Topic title">
+				</div>
+
+				<div class="btn do" data-type="create">Create topic</div>
+			</div>
+
+			<div class="page" data-action="page" data-page="2" style="display: none;">
+				<div class="input-group">
+					<label for="topic">Topic: News</label>
+				</div>
+
+				<div class="input-group">
+					<input type="text" name="message" placeholder="Message">
+				</div>
+
+				<div class="btn do" data-type="send">Send message</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		window.$ = window.jQuery = require('jquery');
+
+		$('.close').on('click', function(){
+		    window.ipcRenderer.send('close-app', '');
+		});
+
+		$('.button[data-action="page"]').on('click', function(){
+			if ($(this).hasClass('active'))
+				return;
+
+			$('.button[data-action="page"]').removeClass('active');
+			$(this).addClass('active');
+
+			$('.row[data-action="page"]').hide();
+			$('.row[data-page="' + $(this).data('page') + '"]').show();
+		});
+
+		$('.btn.do[data-type="selectProto"]').on('click', function(){
+			window.ipcRenderer.send('selectProto', {proto: $('select[name="proto"]').val()});
+
+			$('.page[data-page="0"]').hide();
+			$('.page[data-page="1"]').show();
+		});
+
+		$('.btn.do[data-type="create"]').on('click', function(){
+			window.ipcRenderer.send('start-connection', {topic: $('input[name="title"]').val()});
+		});
+
+		$('.btn.do[data-type="send"]').on('click', function(){
+			window.ipcRenderer.send('send-message', {message: $('input[name="message"]').val()});
+			$('input[name="message"]').val('');
+		});
+
+		$(document).ready(function(){
+			window.ipcRenderer.on('start', (event, data) => {
+				$('.page[data-page="1"]').hide();
+				$('.page[data-page="2"]').show();
+
+				$('label[for="topic"]').html('Topic: ' + data.topic);
+	        });
+		});
+	</script>
+</body>
+</html>
